@@ -313,9 +313,14 @@ public class MyService extends Service implements SensorEventListener{
 		
 	}
 
-	public void onSensorChanged(SensorEvent arg0) {
+	public void onSensorChanged(SensorEvent event) {
 		// TODO Auto-generated method stub
-		
+		//Log.d("Power", String.valueOf(mAccelerometer.getPower()));
+	    if (event.sensor.getType() != Sensor.TYPE_ACCELEROMETER){
+            return;
+         }
+	
+		//Log.d("Sensor Values", String.valueOf(event.values[0])+","+String.valueOf(event.values[1])+","+String.valueOf(event.values[2]));
 	}
 }
 	

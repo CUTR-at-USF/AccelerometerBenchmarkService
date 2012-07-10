@@ -1,0 +1,11 @@
+<resources>
+
+    <string name="app_name">Service Test</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_service_main">ServiceMain</string>
+    <string name="btnStart_name">Start Service</string>
+    <string name="btnStop_name">Stop Service</string>
+    <string name="app_Header">Android Battery Benchmark Service</string>
+
+</resources>

@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".ServiceMain"
+            android:name="com.sensor.alarm.service.test.ServiceMain"
             android:label="@string/title_activity_service_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         
-        <service android:enabled="true" android:name=".MyService" />
+        <service android:enabled="true" android:name="com.sensor.alarm.service.test.MyService" />
         
     </application>
 

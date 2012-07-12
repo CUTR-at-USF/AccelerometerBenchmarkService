@@ -7,8 +7,8 @@
     <string name="btnStart_name">Start Service</string>
     <string name="btnStop_name">Stop Service</string>
     <string name="app_Header">Android Battery Benchmark Service</string>
-    <string name="repeating_scheduled">Repeating alarm will go off in 15 seconds and every 15 seconds after based on the elapsed realtime clock</string>
-    <string name="repeating_unscheduled">Repeating alarm </string>
+    <string name="repeating_scheduled">Repeating alarm will go off in x seconds and every y seconds after based on the elapsed realtime clock</string>
+    <string name="repeating_unscheduled">Repeating service shutdown</string>
     <string name="alarm_service_finished">The Alarm service has finished running</string>
     <string name="alarm_service_started">The alarm service has started running</string>
     <string name="alarm_service_label">Sample Alarm Service</string>

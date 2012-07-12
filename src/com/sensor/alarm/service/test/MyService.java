@@ -49,6 +49,7 @@ import android.os.IBinder;
 import android.os.Parcel;
 import android.os.RemoteException;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
 
 /**
@@ -60,9 +61,19 @@ import android.widget.Toast;
  * @see AlarmService_Alarm
  */
 public class MyService extends Service implements SensorEventListener {
+	 String TAG = "MyService", 
+			SENSOR = "Accelerometer", 
+			BINFO = "Battery", 
+			SAMPLES = "Counter",
+			LOCATION = "WHere am I?",
+			FILE = "File";
+	
+	
     NotificationManager mNM;
 
-    static int interval=15000;
+    EditText txtDuration;
+    public static int interval = 15; //sec
+    public static int duration = 5; //sec
     
     static SensorManager mSensorManager;
     static Sensor mAccelerometer;
@@ -84,9 +95,9 @@ public class MyService extends Service implements SensorEventListener {
 	static SimpleDateFormat csvFormatterDate,csvFormatterTime, fileDate, fileTime;
 	static String csvFormattedDate, csvFormattedTime, formatFileDate, formatFileTime;
 	
-	static int counter = 0;
+	public static int counter = 0;
 	
-	boolean fileCreated = false;
+	static boolean fileCreated = false;
     BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
 
 		@Override
@@ -96,7 +107,8 @@ public class MyService extends Service implements SensorEventListener {
 			scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);//SCALE OF FULL BATTERY CHARGE
 			temp = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1);//BATTERY TEMPERATURE
 			voltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1);//BATTERY VOLTAGE
-			Log.e("BatteryManager", "level is "+level+"/"+scale+", temp is "+temp+", voltage is "+voltage);     
+			Log.d(TAG, "Battery level is "+level+"/"+scale+", temp is "+temp+", voltage is "+voltage);
+			Log.d(BINFO, "Battery level is "+level+"/"+scale+", temp is "+temp+", voltage is "+voltage);     
 
 			try {
 
@@ -105,7 +117,7 @@ public class MyService extends Service implements SensorEventListener {
 				csvFormattedTime = csvFormatterTime.format(timestamp);
 
 				out.newLine();
-				
+				Log.d(FILE,"Wrote battery info");
 				out.append(csvFormattedDate +","+ csvFormattedTime +","+ Integer.toString(level) +","+ Integer.toString(voltage)+"," + counter);
 
 			} catch (IOException e) {
@@ -122,7 +134,8 @@ public class MyService extends Service implements SensorEventListener {
 
         // show the icon in the status bar
         showNotification();
-        Log.d("Location", "in service");
+        Log.d(TAG, "Hello from MyService");
+        Log.d(LOCATION,"Hello from MyService");
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         
@@ -162,7 +175,7 @@ public class MyService extends Service implements SensorEventListener {
 					out = new BufferedWriter(filewriter);
 
 					out.write("Date" +","+ "Time" +","+ "BatteryLevel(0-100)" +","+"Voltage"+","+ "Sample#");  
-					//out.write("State" +","+ "Time"+","+ "Sample#");  
+					Log.d(FILE,"File Created and Titled");  
 
 				}  
 			} catch (IOException e) {  
@@ -172,10 +185,13 @@ public class MyService extends Service implements SensorEventListener {
   		 fileCreated= true;
         }
   		 
+        Log.d(TAG, "Thread start in service");
+        
+        //duration = Integer.parseInt(txtDuration.getText().toString());
         Thread thr = new Thread(null, mTask, "AlarmService_Service");
         thr.start();
         
-        Log.d("Counter", String.valueOf(counter));
+        
         
        
     }
@@ -183,15 +199,11 @@ public class MyService extends Service implements SensorEventListener {
     @Override
     public void onDestroy() {
         // Cancel the notification -- we use the same ID that we had used to start it
+    	Log.d(TAG, "BATTERY SENSOR OFF");
+    	Log.d(SENSOR, "Sensor OFF");
     	 unregisterReceiver(batteryReceiver);
 		    
-			try {
-				out.flush();
-				out.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			
 			
         mNM.cancel(R.string.alarm_service_started);
 
@@ -206,11 +218,14 @@ public class MyService extends Service implements SensorEventListener {
         public void run() {
             // Normally we would do some work here...  for our sample, we will
             // just sleep for 30 seconds.
-            long endTime = System.currentTimeMillis() + R.id.txtInterval*1000;
-            
+            long endTime = System.currentTimeMillis() + duration*1000;
+            Log.d(TAG, "Sensor ON");
+            Log.d(SENSOR, "Sensor ON");
             //register sensor listener here
             mSensorManager.registerListener(MyService.this, mAccelerometer,
         			SensorManager.SENSOR_DELAY_FASTEST);
+            Log.d(TAG, "BATTERY SENSOR ON");
+            Log.d(BINFO, "BATTERY SENSOR ON");
             IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
 			registerReceiver(batteryReceiver, filter);
             while (System.currentTimeMillis() < endTime) {
@@ -219,13 +234,18 @@ public class MyService extends Service implements SensorEventListener {
                     try {
                         mBinder.wait(endTime - System.currentTimeMillis());
                     } catch (Exception e) {
+                    	Log.e(TAG, "Exception calling wait on binder: " + e);
                     }
                 }
             }
             
             //Deregister listener here
+            Log.d(TAG, "Sensor OFF");
+            Log.d(SENSOR,"Sensor OFF");
             mSensorManager.unregisterListener(MyService.this, mAccelerometer );           
             ++counter;
+            Log.d("TAG", "counter="+counter);
+            Log.d(SAMPLES,"Samples="+counter);
             // Done with our work...  stop the service!
             MyService.this.stopSelf();
         }
@@ -277,9 +297,12 @@ public class MyService extends Service implements SensorEventListener {
 		
 	}
 
-	public void onSensorChanged(SensorEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	public void onSensorChanged(SensorEvent event) {
+		//if(event.sensor.getName() == SensorManager.SENSOR_ACCELEROMETER){
+			Log.d(TAG, "x=" + event.values[0] + ", y=" + event.values[1] +", z=" + event.values[2]);
+		//}
 	}
+	
+	
 }
 

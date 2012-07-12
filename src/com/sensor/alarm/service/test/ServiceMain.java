@@ -2,6 +2,8 @@ package com.sensor.alarm.service.test;
 
 
 
+import java.io.IOException;
+
 import com.example.service.test.R;
 
 import android.app.Activity;
@@ -15,7 +17,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -28,6 +29,11 @@ import android.widget.Toast;
  */
 public class ServiceMain extends Activity {
     private PendingIntent mAlarmSender;
+    EditText txtInterval;
+    EditText txtDuration;
+    
+    static int interval= MyService.interval;
+    
     
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,24 +47,34 @@ public class ServiceMain extends Activity {
         
         setContentView(R.layout.activity_service_main);
 
+        
+        
         // Watch for button clicks.
         Button button = (Button) findViewById(R.id.btnStart);
         button.setOnClickListener(mStartAlarmListener);
         button = (Button)findViewById(R.id.btnStop);
         button.setOnClickListener(mStopAlarmListener);
+        txtInterval = (EditText) findViewById(R.id.txtInterval);
+        txtDuration = (EditText) findViewById(R.id.txtDuration);
+        
+        //Set default values
+        txtInterval.setText("15");
+        txtDuration.setText("5");
     }
 
     private OnClickListener mStartAlarmListener = new OnClickListener() {
         public void onClick(View v) {
             // We want the alarm to go off 30 seconds from now.
             long firstTime = SystemClock.elapsedRealtime();
-
+            
+            interval = Integer.parseInt(txtInterval.getText().toString());
+            //duration = Integer.parseInt(txtDuration.getText().toString());
           
             // Schedule the alarm!
             AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
             am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                            firstTime, R.id.txtInterval*1000, mAlarmSender);
-            Log.d("Location", "in activity");
+                            firstTime, interval*1000, mAlarmSender);
+            Log.d("Where am I?","Hello from Activity");
             // Tell the user about what we did.
             Toast.makeText(ServiceMain.this, R.string.repeating_scheduled,
                     Toast.LENGTH_LONG).show();
@@ -68,7 +84,17 @@ public class ServiceMain extends Activity {
     private OnClickListener mStopAlarmListener = new OnClickListener() {
         public void onClick(View v) {
         	
-        	Log.d("Location","Activity");
+        	
+        	try {
+        		Log.d("FILE","Closed the File");
+				MyService.out.flush();
+				MyService.out.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	
+        	
             // And cancel the alarm.
             AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
             am.cancel(mAlarmSender);

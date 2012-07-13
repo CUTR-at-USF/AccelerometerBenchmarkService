@@ -88,7 +88,9 @@ public class ServiceMain extends Activity {
     private OnClickListener mStopAlarmListener = new OnClickListener() {
         public void onClick(View v) {
         	
-        	
+        	Log.e("Boolean","File In Main: "+ MyService.fileCreated);
+        	MyService.fileCreated = false;//when activity closed and opened again boolean satys true
+        	Log.e("Boolean","File in Main after: "+ MyService.fileCreated);
         	try {
         		Log.d("FILE","Closed the File");
 				MyService.out.flush();

@@ -98,6 +98,7 @@ public class MyService extends Service implements SensorEventListener {
 	static int counter = 0;
 	
 	static boolean fileCreated = false;
+	
     BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
 
 		@Override
@@ -109,7 +110,7 @@ public class MyService extends Service implements SensorEventListener {
 			voltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1);//BATTERY VOLTAGE
 			Log.d(TAG, "Battery level is "+level+"/"+scale+", temp is "+temp+", voltage is "+voltage);
 			Log.d(BINFO, "Battery level is "+level+"/"+scale+", temp is "+temp+", voltage is "+voltage);     
-
+			
 			try {
 
 				timestamp = new Date();
@@ -118,7 +119,7 @@ public class MyService extends Service implements SensorEventListener {
 
 				out.newLine();
 				Log.d(FILE,"Wrote battery info");
-				out.append(csvFormattedDate +","+ csvFormattedTime +","+ Integer.toString(level) +","+ Integer.toString(voltage)+"," + counter);
+				out.append(csvFormattedDate +","+ csvFormattedTime +","+ Integer.toString(level) +","+ Integer.toString(voltage)+","+ counter);
 
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -138,7 +139,7 @@ public class MyService extends Service implements SensorEventListener {
         Log.d(LOCATION,"Hello from MyService");
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        
+        Log.e("Boolean","File Created:"+ fileCreated);
         if(!fileCreated){
     	csvFormatterDate = new SimpleDateFormat("MM-dd-yyyy");  //formatter for CSV timestamp field
   		csvFormatterTime = new SimpleDateFormat("HH:mm:ss");
@@ -174,7 +175,7 @@ public class MyService extends Service implements SensorEventListener {
 					filewriter = new FileWriter(file);  
 					out = new BufferedWriter(filewriter);
 
-					out.write("Date" +","+ "Time" +","+ "BatteryLevel(0-100)" +","+"Voltage"+","+ "Sample#");  
+					out.write("Date" +","+ "Time" +","+ "BatteryLevel(0-100)" +","+"Voltage"+"," + "Sample#");  
 					Log.d(FILE,"File Created and Titled");  
 
 				}  
@@ -200,6 +201,7 @@ public class MyService extends Service implements SensorEventListener {
         // Cancel the notification -- we use the same ID that we had used to start it
     	Log.d(TAG, "BATTERY SENSOR OFF");
     	Log.d(SENSOR, "Sensor OFF");
+    	Log.e("Boolean","File in onDestroy: "+ fileCreated);
     	 unregisterReceiver(batteryReceiver);
 		    
 //			
@@ -241,6 +243,7 @@ public class MyService extends Service implements SensorEventListener {
             //Deregister listener here
             Log.d(TAG, "Sensor OFF");
             Log.d(SENSOR,"Sensor OFF");
+            Log.e("Boolean","File in unregister sensor: "+ fileCreated);
             mSensorManager.unregisterListener(MyService.this, mAccelerometer );           
             ++counter;
             Log.d("TAG", "counter="+counter);

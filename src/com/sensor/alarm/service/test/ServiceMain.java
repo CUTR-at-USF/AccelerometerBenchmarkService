@@ -32,7 +32,7 @@ public class ServiceMain extends Activity {
     EditText txtInterval;
     EditText txtDuration;
     
-    static int interval= MyService.interval;
+   //static int interval= MyService.interval;
     
     
     @Override
@@ -60,6 +60,10 @@ public class ServiceMain extends Activity {
         //Set default values
         txtInterval.setText("15");
         txtDuration.setText("5");
+        
+     // And cancel the alarm.
+//        AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
+//        am.cancel(mAlarmSender);
     }
 
     private OnClickListener mStartAlarmListener = new OnClickListener() {
@@ -67,13 +71,13 @@ public class ServiceMain extends Activity {
             // We want the alarm to go off 30 seconds from now.
             long firstTime = SystemClock.elapsedRealtime();
             
-            interval = Integer.parseInt(txtInterval.getText().toString());
-            //duration = Integer.parseInt(txtDuration.getText().toString());
+            MyService.interval = Integer.parseInt(txtInterval.getText().toString());
+            MyService.duration = Integer.parseInt(txtDuration.getText().toString());
           
             // Schedule the alarm!
             AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
             am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                            firstTime, interval*1000, mAlarmSender);
+                            firstTime, MyService.interval*1000, mAlarmSender);
             Log.d("Where am I?","Hello from Activity");
             // Tell the user about what we did.
             Toast.makeText(ServiceMain.this, R.string.repeating_scheduled,

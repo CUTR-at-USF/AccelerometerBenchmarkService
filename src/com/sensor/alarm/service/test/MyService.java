@@ -69,9 +69,9 @@ public class MyService extends Service implements SensorEventListener {
 			FILE = "File";
 	
 	
+	   
     NotificationManager mNM;
-
-    EditText txtDuration;
+       
     public static int interval = 15; //sec
     public static int duration = 5; //sec
     
@@ -95,7 +95,7 @@ public class MyService extends Service implements SensorEventListener {
 	static SimpleDateFormat csvFormatterDate,csvFormatterTime, fileDate, fileTime;
 	static String csvFormattedDate, csvFormattedTime, formatFileDate, formatFileTime;
 	
-	public static int counter = 0;
+	static int counter = 0;
 	
 	static boolean fileCreated = false;
     BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
@@ -169,7 +169,7 @@ public class MyService extends Service implements SensorEventListener {
 
 					fileDir = new File(root.getAbsolutePath()+"/battery_data/");  
 					fileDir.mkdirs();  
-
+	
 					file= new File(fileDir, formatFileDate +"_interval"+ "-"+ interval+"_"+ formatFileTime + ".csv");  
 					filewriter = new FileWriter(file);  
 					out = new BufferedWriter(filewriter);
@@ -186,8 +186,7 @@ public class MyService extends Service implements SensorEventListener {
         }
   		 
         Log.d(TAG, "Thread start in service");
-        
-        //duration = Integer.parseInt(txtDuration.getText().toString());
+   
         Thread thr = new Thread(null, mTask, "AlarmService_Service");
         thr.start();
         

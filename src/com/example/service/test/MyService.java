@@ -36,9 +36,9 @@ public class MyService extends Service implements SensorEventListener{
 	 SensorManager mSensorManager;
 	  Sensor mAccelerometer;
 	  Timer timer1 = new Timer();
-	  MyTimerTask1 firsttask;
+	  //MyTimerTask1 firsttask;
 	  Timer timer2 = new Timer();
-	  MyTimerTask2 secondtask;
+	 // MyTimerTask2 secondtask;
 	  
 	  public static String BatteryTag = "Battery";
 	  public static String SensorTag = "Sensor";
@@ -129,14 +129,14 @@ public class MyService extends Service implements SensorEventListener{
 	public void onDestroy() {
 		Toast.makeText(this, "My Service Stopped", Toast.LENGTH_LONG).show();
 		Log.d(TAG, "onDestroy");
-		 firsttask.cancel();
-		    firsttask = null;
+		// firsttask.cancel();
+		  //  firsttask = null;
 		    timer1.purge();
 		    timer1.cancel();
 		    timer1=null;
 		    
-		    secondtask.cancel();
-		    secondtask = null;
+		    //secondtask.cancel();
+		    //secondtask = null;
 		    timer2.purge();
 		    timer2.cancel();
 		    timer2=null;
@@ -190,13 +190,14 @@ public class MyService extends Service implements SensorEventListener{
 			} catch (IOException e) {  
 				Log.e("ERROR:---", "Could not write file to SDCard" + e.getMessage());  
 			}  
-		 firsttask = new MyTimerTask1();
-		    timer1.schedule(firsttask, 5000,5000);
-		    
-		
+		 
+		 mSensorManager.registerListener(MyService.this,mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+		// firsttask = new MyTimerTask1();
+		  //  timer1.schedule(firsttask, 5000,5000);
 	}
+		
 	
-	private void checkTimers() {
+	/*private void checkTimers() {
 	    // TODO Auto-generated method stub
 	    if (on) {
 	    	
@@ -207,7 +208,7 @@ public class MyService extends Service implements SensorEventListener{
 	      // accel. on
 	      timer1 = new Timer();
 	      firsttask = new MyTimerTask1();
-	     /* timestamp = new Date();
+	      timestamp = new Date();
 			
 			csvFormattedTime = csvFormatterTime.format(timestamp);
 
@@ -219,7 +220,7 @@ public class MyService extends Service implements SensorEventListener{
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}*/
+			}
 	      
 	      //first number is interval, second number is duration
 	      timer1.schedule(firsttask, 15000, 5000);
@@ -233,7 +234,7 @@ public class MyService extends Service implements SensorEventListener{
 	      // accel. off
 	      timer2 = new Timer();
 	      secondtask = new MyTimerTask2();
-	     /* timestamp = new Date();
+	      timestamp = new Date();
 	      csvFormattedTime = csvFormatterTime.format(timestamp);
 	      try {
 	      	out.newLine();
@@ -241,7 +242,7 @@ public class MyService extends Service implements SensorEventListener{
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}*/
+			}
 	      //task object, duration, interval
 	      timer2.schedule(secondtask, 5000, 15000);
 	      Log.d(TimerTag, "scheduled timer2");
@@ -308,14 +309,14 @@ public class MyService extends Service implements SensorEventListener{
 	    }// end of run
 	    
 	  }//end of secondtask
-	public void onAccuracyChanged(Sensor arg0, int arg1) {
+*/	public void onAccuracyChanged(Sensor arg0, int arg1) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	public void onSensorChanged(SensorEvent arg0) {
 		// TODO Auto-generated method stub
-		
+		Log.d("SENSOR","ON");
 	}
 }
 	

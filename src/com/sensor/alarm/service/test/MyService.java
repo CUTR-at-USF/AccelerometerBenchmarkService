@@ -99,6 +99,8 @@ public class MyService extends Service implements SensorEventListener {
 	
 	static boolean fileCreated = false;
 	
+	static IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+	
     BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
 
 		@Override
@@ -133,9 +135,13 @@ public class MyService extends Service implements SensorEventListener {
     public void onCreate() {
         mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 
+        Log.d("Bateria","Lee");
+        IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+		registerReceiver(batteryReceiver, filter);
         // show the icon in the status bar
         showNotification();
         Log.d(TAG, "Hello from MyService");
+        
         Log.d(LOCATION,"Hello from MyService");
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -202,8 +208,9 @@ public class MyService extends Service implements SensorEventListener {
     	Log.d(TAG, "BATTERY SENSOR OFF");
     	Log.d(SENSOR, "Sensor OFF");
     	Log.e("Boolean","File in onDestroy: "+ fileCreated);
+    	
     	 unregisterReceiver(batteryReceiver);
-		    
+    	 Log.d("Bateria","No Lee");
 //			
 			
         mNM.cancel(R.string.alarm_service_started);
@@ -222,13 +229,16 @@ public class MyService extends Service implements SensorEventListener {
             long endTime = System.currentTimeMillis() + duration*1000;
             Log.d(TAG, "Sensor ON");
             Log.d(SENSOR, "Sensor ON");
+            /*IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+			registerReceiver(batteryReceiver, filter);*/
             //register sensor listener here
             mSensorManager.registerListener(MyService.this, mAccelerometer,
         			SensorManager.SENSOR_DELAY_FASTEST);
             Log.d(TAG, "BATTERY SENSOR ON");
             Log.d(BINFO, "BATTERY SENSOR ON");
-            IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-			registerReceiver(batteryReceiver, filter);
+            
+    
+			
             while (System.currentTimeMillis() < endTime) {
             	
                 synchronized (mBinder) {
@@ -246,6 +256,8 @@ public class MyService extends Service implements SensorEventListener {
             Log.e("Boolean","File in unregister sensor: "+ fileCreated);
             mSensorManager.unregisterListener(MyService.this, mAccelerometer );           
             ++counter;
+           
+			//registerReceiver(batteryReceiver, filter);
             Log.d("TAG", "counter="+counter);
             Log.d(SAMPLES,"Samples="+counter);
             // Done with our work...  stop the service!

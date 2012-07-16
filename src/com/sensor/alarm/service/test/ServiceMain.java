@@ -61,9 +61,7 @@ public class ServiceMain extends Activity {
         txtInterval.setText("15");
         txtDuration.setText("5");
         
-     // And cancel the alarm.
-//        AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
-//        am.cancel(mAlarmSender);
+
     }
 
     private OnClickListener mStartAlarmListener = new OnClickListener() {
@@ -88,6 +86,7 @@ public class ServiceMain extends Activity {
     private OnClickListener mStopAlarmListener = new OnClickListener() {
         public void onClick(View v) {
         	
+        	MyService.counter = 0;
         	Log.e("Boolean","File In Main: "+ MyService.fileCreated);
         	MyService.fileCreated = false;//when activity closed and opened again boolean satys true
         	Log.e("Boolean","File in Main after: "+ MyService.fileCreated);

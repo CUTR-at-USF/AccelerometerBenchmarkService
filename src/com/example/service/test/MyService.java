@@ -31,11 +31,11 @@ import android.widget.Toast;
 
 public class MyService extends Service implements SensorEventListener{
 	
-	ServiceMain mainActivity;
-	private static final String TAG = "MyService";
+	
+	//private static final String TAG = "MyService";
 	 SensorManager mSensorManager;
 	  Sensor mAccelerometer;
-	  Timer timer1 = new Timer();
+	 /* Timer timer1 = new Timer();
 	  //MyTimerTask1 firsttask;
 	  Timer timer2 = new Timer();
 	 // MyTimerTask2 secondtask;
@@ -74,16 +74,16 @@ public class MyService extends Service implements SensorEventListener{
 		String csvFormattedDate, csvFormattedTime, formatFileDate, formatFileTime;
 		
 		final int interval=15000;
-		
+		*/
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
 	}
 	
-	BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
+	//BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
 
 
-		@Override
+		/*@Override
 		public void onReceive(Context context, Intent intent) {
 
 			level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);//BATTERY CHARGE
@@ -108,26 +108,26 @@ public class MyService extends Service implements SensorEventListener{
 			}
 		}
 
-	};
+	};*/
 	
 	
 	@Override
 	public void onCreate() {
 		Toast.makeText(this, "My Service Created", Toast.LENGTH_LONG).show();
-		Log.d(TAG, "onCreate");
+		//Log.d(TAG, "onCreate");
 
 	    mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
 	    mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		
-  		csvFormatterDate = new SimpleDateFormat("MM-dd-yyyy");  //formatter for CSV timestamp field
-  		csvFormatterTime = new SimpleDateFormat("HH:mm:ss");
+  		/*csvFormatterDate = new SimpleDateFormat("MM-dd-yyyy");  //formatter for CSV timestamp field
+  		csvFormatterTime = new SimpleDateFormat("HH:mm:ss");*/
   		
   		
 	}
 
 	@Override
 	public void onDestroy() {
-		Toast.makeText(this, "My Service Stopped", Toast.LENGTH_LONG).show();
+		/*Toast.makeText(this, "My Service Stopped", Toast.LENGTH_LONG).show();
 		Log.d(TAG, "onDestroy");
 		// firsttask.cancel();
 		  //  firsttask = null;
@@ -150,11 +150,14 @@ public class MyService extends Service implements SensorEventListener{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			*/
+			mSensorManager.unregisterListener(MyService.this, mAccelerometer );
+			
 	}
 	
 	@Override
 	public void onStart(Intent intent, int startid) {
-		Toast.makeText(this, "My Service Started", Toast.LENGTH_LONG).show();
+		/*Toast.makeText(this, "My Service Started", Toast.LENGTH_LONG).show();
 		Log.d(TAG, "onStart");
 		 try {  
 
@@ -193,7 +196,7 @@ public class MyService extends Service implements SensorEventListener{
 		 
 		  
          IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-			registerReceiver(batteryReceiver, filter);
+			registerReceiver(batteryReceiver, filter);*/
 		 mSensorManager.registerListener(MyService.this,mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
 		// firsttask = new MyTimerTask1();
 		  //  timer1.schedule(firsttask, 5000,5000);
@@ -312,51 +315,17 @@ public class MyService extends Service implements SensorEventListener{
 	    }// end of run
 	    
 	  }//end of secondtask
-*/	public void onAccuracyChanged(Sensor arg0, int arg1) {
+*/
+	public void onAccuracyChanged(Sensor arg0, int arg1) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void onSensorChanged(SensorEvent arg0) {
+	public void onSensorChanged(SensorEvent event) {
 		// TODO Auto-generated method stub
-		Log.d("SENSOR","ON");
+		if(event.sensor.getType()==Sensor.TYPE_ACCELEROMETER){
+			Log.d("SENSOR","On");
+		}
 	}
 }
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	

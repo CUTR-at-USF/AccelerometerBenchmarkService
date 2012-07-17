@@ -191,6 +191,9 @@ public class MyService extends Service implements SensorEventListener{
 				Log.e("ERROR:---", "Could not write file to SDCard" + e.getMessage());  
 			}  
 		 
+		  
+         IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+			registerReceiver(batteryReceiver, filter);
 		 mSensorManager.registerListener(MyService.this,mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
 		// firsttask = new MyTimerTask1();
 		  //  timer1.schedule(firsttask, 5000,5000);

@@ -76,19 +76,21 @@ public class ServiceMain extends Activity {
             AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
             am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                             firstTime, MyService.interval*1000, mAlarmSender);
-            Log.d("Where am I?","Hello from Activity");
+            
+          
+           /* Log.d("Where am I?","Hello from Activity");
             // Tell the user about what we did.
             Toast.makeText(ServiceMain.this, R.string.repeating_scheduled,
-                    Toast.LENGTH_LONG).show();
+                    Toast.LENGTH_LONG).show();*/
         }
     };
 
     private OnClickListener mStopAlarmListener = new OnClickListener() {
         public void onClick(View v) {
         	
-        	MyService.counter = 0;
-        	Log.e("Boolean","File In Main: "+ MyService.fileCreated);
-        	MyService.fileCreated = false;//when activity closed and opened again boolean satys true
+        	/*//MyService.counter = 0;
+        	//Log.e("Boolean","File In Main: "+ MyService.fileCreated);*/
+        	/*MyService.fileCreated = false;//when activity closed and opened again boolean satys true
         	Log.e("Boolean","File in Main after: "+ MyService.fileCreated);
         	try {
         		Log.d("FILE","Closed the File");
@@ -97,16 +99,16 @@ public class ServiceMain extends Activity {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}*/
         	
-        	
+        	Log.d("Status","Sensor Canceled");
             // And cancel the alarm.
             AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
             am.cancel(mAlarmSender);
 
             // Tell the user about what we did.
-            Toast.makeText(ServiceMain.this, R.string.repeating_unscheduled,
-                    Toast.LENGTH_LONG).show();
+          //  Toast.makeText(ServiceMain.this, R.string.repeating_unscheduled,
+            //        Toast.LENGTH_LONG).show();
 
         }
     };

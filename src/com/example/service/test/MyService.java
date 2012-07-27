@@ -113,11 +113,11 @@ public class MyService extends Service implements SensorEventListener{
 	
 	@Override
 	public void onCreate() {
-		Toast.makeText(this, "My Service Created", Toast.LENGTH_LONG).show();
+		//Toast.makeText(this, "My Service Created", Toast.LENGTH_LONG).show();
 		//Log.d(TAG, "onCreate");
 
-	    mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
-	    mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+	   // mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+	    //mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		
   		/*csvFormatterDate = new SimpleDateFormat("MM-dd-yyyy");  //formatter for CSV timestamp field
   		csvFormatterTime = new SimpleDateFormat("HH:mm:ss");*/
@@ -151,7 +151,7 @@ public class MyService extends Service implements SensorEventListener{
 				e.printStackTrace();
 			}
 			*/
-			mSensorManager.unregisterListener(MyService.this, mAccelerometer );
+			//mSensorManager.unregisterListener(MyService.this, mAccelerometer );
 			
 	}
 	
@@ -197,7 +197,7 @@ public class MyService extends Service implements SensorEventListener{
 		  
          IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
 			registerReceiver(batteryReceiver, filter);*/
-		 mSensorManager.registerListener(MyService.this,mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+		// mSensorManager.registerListener(MyService.this,mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
 		// firsttask = new MyTimerTask1();
 		  //  timer1.schedule(firsttask, 5000,5000);
 	}
@@ -323,9 +323,9 @@ public class MyService extends Service implements SensorEventListener{
 
 	public void onSensorChanged(SensorEvent event) {
 		// TODO Auto-generated method stub
-		if(event.sensor.getType()==Sensor.TYPE_ACCELEROMETER){
+		/*if(event.sensor.getType()==Sensor.TYPE_ACCELEROMETER){
 			Log.d("SENSOR","On");
-		}
+		}*/
 	}
 }
 	

@@ -1,3 +1,16 @@
+/**
+--
+Application Title: ServiceMain
+Date: August 1, 2012
+By: Francisco J. Perez Laras
+University of Puerto Rico Bayamon Campus
+Contact: fplaras@gmail.com
+Description: This application turns on and off the accelerometer sensor.
+The sensor is duty cycled at a user defined time. When the benchmark is running
+the battery change will be recorded. All notifications are commented.
+--
+**/
+
 package com.sensor.alarm.service.test;
 
 /*
@@ -26,13 +39,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.example.service.test.R;
-
-
-
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -49,8 +55,6 @@ import android.os.IBinder;
 import android.os.Parcel;
 import android.os.RemoteException;
 import android.util.Log;
-import android.widget.EditText;
-import android.widget.Toast;
 
 /**
  * This is an example of implementing an application service that will run in
@@ -61,19 +65,11 @@ import android.widget.Toast;
  * @see AlarmService_Alarm
  */
 public class MyService extends Service implements SensorEventListener {
-	 String TAG = "MyService", 
-			SENSOR = "Accelerometer", 
-			BINFO = "Battery", 
-			SAMPLES = "Counter",
-			LOCATION = "WHere am I?",
-			FILE = "File";
 	
-	
-	   
     //NotificationManager mNM;
        
-    public static int interval = 15; //sec
-    public static int duration = 5; //sec
+    public static int interval = 15; //seconds
+    public static int duration = 5; //seconds
     
     static SensorManager mSensorManager;
     static Sensor mAccelerometer;
@@ -99,55 +95,54 @@ public class MyService extends Service implements SensorEventListener {
 	
 	static boolean fileCreated = false;
 	
-	//static IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+	static IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
 	
-//    BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
-//
-//		@Override
-//		public void onReceive(Context context, Intent intent) {
-//
-//			level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);//BATTERY CHARGE
-//			scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);//SCALE OF FULL BATTERY CHARGE
-//			temp = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1);//BATTERY TEMPERATURE
-//			voltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1);//BATTERY VOLTAGE
-//			Log.d(TAG, "Battery level is "+level+"/"+scale+", temp is "+temp+", voltage is "+voltage);
-//			Log.d(BINFO, "Battery level is "+level+"/"+scale+", temp is "+temp+", voltage is "+voltage);     
-//			
-//			try {
-//
-//				timestamp = new Date();
-//				csvFormattedDate = csvFormatterDate.format(timestamp);
-//				csvFormattedTime = csvFormatterTime.format(timestamp);
-//
-//				out.newLine();
-//				Log.d(FILE,"Wrote battery info");
-//				out.append(csvFormattedDate +","+ csvFormattedTime +","+ Integer.toString(level) +","+ Integer.toString(voltage)+","+ counter);
-//
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
-//
-//	};
+	//--Battery data--
+    BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+
+			//variables returned from the BatteryManager
+			level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);//BATTERY CHARGE
+			scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);//SCALE OF FULL BATTERY CHARGE
+			temp = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1);//BATTERY TEMPERATURE
+			voltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1);//BATTERY VOLTAGE
+			
+			try {
+
+				timestamp = new Date();
+				csvFormattedDate = csvFormatterDate.format(timestamp);
+				csvFormattedTime = csvFormatterTime.format(timestamp);
+
+				out.newLine();
+				
+				out.append(csvFormattedDate +","+ csvFormattedTime +","+ Integer.toString(level) +","+ Integer.toString(temp)+","+ Integer.toString(voltage));
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+	};
 	
+	//--ONCREATE
     @Override
     public void onCreate() {
-        /*mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        //mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 
-        Log.d("Bateria","Lee");
-        IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-		registerReceiver(batteryReceiver, filter);
-        // show the icon in the status bar
-        showNotification();
-        Log.d(TAG, "Hello from MyService");
+       
         
-        Log.d(LOCATION,"Hello from MyService");*/
-    	Log.d("SERVICE","CREATED");
-       // mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
-        //mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-       //Log.e("Boolean","File Created:"+ fileCreated);
-       /* if(!fileCreated){
+        // show the icon in the status bar
+        //showNotification();
+		
+       mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        
+      
+       if(!fileCreated){
+    	   
     	csvFormatterDate = new SimpleDateFormat("MM-dd-yyyy");  //formatter for CSV timestamp field
   		csvFormatterTime = new SimpleDateFormat("HH:mm:ss");
   		sensorTime = new SimpleDateFormat("H:m:s:S");
@@ -158,7 +153,7 @@ public class MyService extends Service implements SensorEventListener {
   		
   		 try {  
 
-			  timestamp = new Date();
+  			 	timestamp = new Date();
 
 				fileDate = new SimpleDateFormat("MM-dd-yyyy");
 		  		fileTime = new SimpleDateFormat("HH-mm-ss");
@@ -176,15 +171,15 @@ public class MyService extends Service implements SensorEventListener {
 				//check sdcard permission  
 				if (root.canWrite()){ 
 
-					fileDir = new File(root.getAbsolutePath()+"/power_data/");  
+					fileDir = new File(root.getAbsolutePath()+"/battery_data/");  
 					fileDir.mkdirs();  
 					//file name
 					file= new File(fileDir, formatFileDate +"-interval"+ "_"+ MyService.interval+"-"+ formatFileTime + ".csv");  
 					filewriter = new FileWriter(file);  
 					out = new BufferedWriter(filewriter);
 					//cell title
-					out.write("Sensor Power");  
-					Log.d(FILE,"File Created and Titled");  
+					out.write("Date"+","+"Time"+","+"battery level"+","+"temperature"+","+"Voltage");  
+					
 
 				}  
 			} catch (IOException e) {  
@@ -193,83 +188,68 @@ public class MyService extends Service implements SensorEventListener {
   		 
   		 fileCreated= true;
         }
-  		 */
-        Log.d(TAG, "Thread start in service");
-   
-        Thread thr = new Thread(null, mTask, "AlarmService_Service");
+
+       IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+		registerReceiver(batteryReceiver, filter);
+       	//start the thread
+        Thread thr = new Thread(null, mTask, "Service Benchmark");
         thr.start();
        
     }
 
+    //--ONDESTROY
     @Override
     public void onDestroy() {
-        // Cancel the notification -- we use the same ID that we had used to start it
-    	/*Log.d(TAG, "BATTERY SENSOR OFF");
-    	Log.d(SENSOR, "Sensor OFF");
-    	Log.e("Boolean","File in onDestroy: "+ fileCreated);
+        //Cancel the notification -- we use the same ID that we had used to start it
+    
     	
-    	 unregisterReceiver(batteryReceiver);
-    	 Log.d("Bateria","No Lee");*/
-//			
+    	 //unregisterReceiver(batteryReceiver);
+    	 
+			
 			
        // mNM.cancel(R.string.alarm_service_started);
 
         // Tell the user we stopped.
        // Toast.makeText(this, R.string.alarm_service_finished , Toast.LENGTH_SHORT).show();
+    	 
     }
 
     /**
      * The function that runs in our worker thread
      */
     Runnable mTask = new Runnable() {
+    	
         public void run() {
+        	
             // Normally we would do some work here...  for our sample, we will
             // just sleep for 30 seconds.
+        	//sensor will be awake
             long endTime = System.currentTimeMillis() + duration*1000;
-           // Log.d(TAG, "Sensor ON");
-          //  Log.d(SENSOR, "Sensor ON");
-            /*IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-			registerReceiver(batteryReceiver, filter);
-            //register sensor listener here*/
-            Log.d("SENSOR","STARTED");
-         //mSensorManager.registerListener(MyService.this, mAccelerometer,
-        //SensorManager.SENSOR_DELAY_FASTEST);
-          //  Log.d(TAG, "BATTERY SENSOR ON");
-           // Log.d(BINFO, "BATTERY SENSOR ON");
-     
-    
-			
+  
+            //register sensor listener here
+           
+         mSensorManager.registerListener(MyService.this, mAccelerometer,
+        SensorManager.SENSOR_DELAY_FASTEST);    
+    			
             while (System.currentTimeMillis() < endTime) {
             	
                 synchronized (mBinder) {
                     try {
                         mBinder.wait(endTime - System.currentTimeMillis());
                     } catch (Exception e) {
-                    	Log.e(TAG, "Exception calling wait on binder: " + e);
+                    	
                     }
                 }
             }
             
             //Deregister listener here
-           /* Log.d(TAG, "Sensor OFF");
-            Log.d(SENSOR,"Sensor OFF");
-            Log.e("Boolean","File in unregister sensor: "+ fileCreated);*/
-        //  mSensorManager.unregisterListener(MyService.this, mAccelerometer ); 
+           
+            mSensorManager.unregisterListener(MyService.this, mAccelerometer ); 
             
-            /*try {
-            	out.newLine();
-				out.append(String.valueOf(mAccelerometer.getPower()));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*/
-            Log.d("SENSOR","STOPPED");
+           
           //  ++counter;
            
-			//registerReceiver(batteryReceiver, filter);
-           // Log.d("TAG", "counter="+counter);
-          //  Log.d(SAMPLES,"Samples="+counter);
-            // Done with our work...  stop the service!
+			
             MyService.this.stopSelf();
         }
     };

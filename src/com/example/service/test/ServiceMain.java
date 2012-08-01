@@ -1,3 +1,6 @@
+/*This application is set up as a constant running service and also
+contains timer and timertask algorithms.
+*/
 package com.example.service.test;
 
 import android.app.Activity;

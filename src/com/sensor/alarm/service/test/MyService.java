@@ -1,36 +1,22 @@
 /**
 --
-Application Title: ServiceMain
+Application Title: MyService
 Date: August 1, 2012
 By: Francisco J. Perez Laras
 University of Puerto Rico Bayamon Campus
 Contact: fplaras@gmail.com
-Description: This application turns on and off the accelerometer sensor.
+Description: Service class from this application turns on and off the accelerometer sensor.
 The sensor is duty cycled at a user defined time. When the benchmark is running
 the battery change will be recorded. All notifications are commented.
+Acknowledgements:
+Sean J Barbeau from Center for Urban Transportation Research for the mentorship
+University of South Florida - Department of Computer Science and Engineering for the unique opportunity
+National Science Foundation for the internship offering
+Sprint for the mobile device
 --
 **/
 
 package com.sensor.alarm.service.test;
-
-/*
- * Copyright (C) 2007 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-// Need the following import to get access to the app resources, since this
-// class is in a sub-package.
 
 import java.io.BufferedWriter;
 import java.io.File;

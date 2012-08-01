@@ -8,9 +8,13 @@ Contact: fplaras@gmail.com
 Description: This application turns on and off the accelerometer sensor.
 The sensor is duty cycled at a user defined time. When the benchmark is running
 the battery change will be recorded. All notifications are commented.
+Acknowledgements:
+Sean J Barbeau from Center for Urban Transportation Research for the mentorship
+University of South Florida - Department of Computer Science and Engineering for the unique opportunity
+National Science Foundation for the internship offering
+Sprint for the mobile device
 --
  **/
-
 package com.sensor.alarm.service.test;
 
 import java.io.IOException;
